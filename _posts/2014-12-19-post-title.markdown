@@ -32,9 +32,13 @@ This had me stumped for a while. The `UIImage` that I had generated for the `NST
 
 I set a background colour on the label to investigate:
 
-![Background colour showing baseline]({{ site.url }}/images/Screen Shot 2014-12-19 at 9.08.51 PM.png)
+![Background colour showing baseline]({{ site.url }}/images/Screen Shot 2014-12-20 at 1.02.48 AM.png)
+
+![Close up of descenders]({{ site.url }}/images/Screen Shot 2014-12-20 at 1.03.06 AM.png)
 
 Aha! It looks like by default, the `UITextView` renders instances of `NSTextAttachment` on the *baseline*, extending upwards. This means the larger the image, the further down my baseline of the following text will be pushed.
+
+You can see the snapshotted `UILabel` has space at the bottom for it's descenders, so we don't want it rendering on the baseline.
 
 #The Solution
 
@@ -42,35 +46,41 @@ After spending far too much time delving into various TextKit classes, I came up
 
 I started checking out the `NSLayoutManager` class, as that seemed to control how glyphs and characters are positioned in a text container. However it turns out that the `NSTextAttachment` class already has a method returning it's bounds:
 
-    -attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:
+{% highlight objc %}
+-attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:
+{% endhighlight %}
 
 So, I made a simple subclass of `NSTextAttachment` which exposes a property for adjusting the y-offset of the attachment bounds.
 
-	@interface InlineTextAttachment : NSTextAttachment
+{% highlight objc %}
+@interface InlineTextAttachment : NSTextAttachment
 
-	@property CGFloat fontDescender;
+@property CGFloat fontDescender;
 
-	@end
+@end
 
-	@implementation InlineTextAttachment
+@implementation InlineTextAttachment
 
-	- (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex {
-		CGRect superRect = [super attachmentBoundsForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
-		superRect.origin.y = self.fontDescender;
-		return superRect;
-	}
+- (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex {
+	CGRect superRect = [super attachmentBoundsForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
+	superRect.origin.y = self.fontDescender;
+	return superRect;
+}
 
-	@end
+@end
+{% endhighlight %}
 	
 Using this subclass now, I can grab the descender value from the font I'm using in my attributed string.
 
-	UIImage *labelImage = [label snapshotImageAfterScreenUpdates:NO];
-	InlineTextAttachment *attachment = [[InlineTextAttachment alloc] initWithData:nil ofType:nil];
-	UIFont *font = [aString attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
-	
-	attachment.fontDescender = font.descender;
-	attachment.image = labelImage;
-	
+{% highlight objc %}
+UIImage *labelImage = [label snapshotImageAfterScreenUpdates:NO];
+InlineTextAttachment *attachment = [[InlineTextAttachment alloc] initWithData:nil ofType:nil];
+UIFont *font = [aString attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
+
+attachment.fontDescender = font.descender;
+attachment.image = labelImage;
+{% endhighlight %}
+
 And bingo! The descender height was exactly the offset I needed to get all my `NSTextAttachment` instances to line up nicely with my existing text.
 
 ![Final result]({{ site.url }}/images/Screen Shot 2014-12-20 at 12.48.50 AM.png)

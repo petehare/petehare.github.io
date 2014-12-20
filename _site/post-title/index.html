@@ -166,9 +166,13 @@
 
 <p>I set a background colour on the label to investigate:</p>
 
-<p><img src="/images/Screen Shot 2014-12-19 at 9.08.51 PM.png" alt="Background colour showing baseline" /></p>
+<p><img src="/images/Screen Shot 2014-12-20 at 1.02.48 AM.png" alt="Background colour showing baseline" /></p>
+
+<p><img src="/images/Screen Shot 2014-12-20 at 1.03.06 AM.png" alt="Close up of descenders" /></p>
 
 <p>Aha! It looks like by default, the <code>UITextView</code> renders instances of <code>NSTextAttachment</code> on the <em>baseline</em>, extending upwards. This means the larger the image, the further down my baseline of the following text will be pushed.</p>
+
+<p>You can see the snapshotted <code>UILabel</code> has space at the bottom for it’s descenders, so we don’t want it rendering on the baseline.</p>
 
 <h1 id="the-solution">The Solution</h1>
 
@@ -176,37 +180,34 @@
 
 <p>I started checking out the <code>NSLayoutManager</code> class, as that seemed to control how glyphs and characters are positioned in a text container. However it turns out that the <code>NSTextAttachment</code> class already has a method returning it’s bounds:</p>
 
-<pre><code>-attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:
-</code></pre>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">-</span><span class="nf">attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:</span></code></pre></div>
 
 <p>So, I made a simple subclass of <code>NSTextAttachment</code> which exposes a property for adjusting the y-offset of the attachment bounds.</p>
 
-<pre><code>@interface InlineTextAttachment : NSTextAttachment
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">@interface</span> <span class="nc">InlineTextAttachment</span> : <span class="bp">NSTextAttachment</span>
 
-@property CGFloat fontDescender;
+<span class="k">@property</span> <span class="n">CGFloat</span> <span class="n">fontDescender</span><span class="p">;</span>
 
-@end
+<span class="k">@end</span>
 
-@implementation InlineTextAttachment
+<span class="k">@implementation</span> <span class="nc">InlineTextAttachment</span>
 
-- (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex {
-	CGRect superRect = [super attachmentBoundsForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
-	superRect.origin.y = self.fontDescender;
-	return superRect;
-}
+<span class="p">-</span> <span class="p">(</span><span class="bp">CGRect</span><span class="p">)</span><span class="nf">attachmentBoundsForTextContainer:</span><span class="p">(</span><span class="bp">NSTextContainer</span> <span class="o">*</span><span class="p">)</span><span class="nv">textContainer</span> <span class="nf">proposedLineFragment:</span><span class="p">(</span><span class="bp">CGRect</span><span class="p">)</span><span class="nv">lineFrag</span> <span class="nf">glyphPosition:</span><span class="p">(</span><span class="bp">CGPoint</span><span class="p">)</span><span class="nv">position</span> <span class="nf">characterIndex:</span><span class="p">(</span><span class="bp">NSUInteger</span><span class="p">)</span><span class="nv">charIndex</span> <span class="p">{</span>
+	<span class="bp">CGRect</span> <span class="n">superRect</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="nl">attachmentBoundsForTextContainer</span><span class="p">:</span><span class="n">textContainer</span> <span class="nl">proposedLineFragment</span><span class="p">:</span><span class="n">lineFrag</span> <span class="nl">glyphPosition</span><span class="p">:</span><span class="n">position</span> <span class="nl">characterIndex</span><span class="p">:</span><span class="n">charIndex</span><span class="p">];</span>
+	<span class="n">superRect</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">fontDescender</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">superRect</span><span class="p">;</span>
+<span class="p">}</span>
 
-@end
-</code></pre>
+<span class="k">@end</span></code></pre></div>
 
 <p>Using this subclass now, I can grab the descender value from the font I’m using in my attributed string.</p>
 
-<pre><code>UIImage *labelImage = [label snapshotImageAfterScreenUpdates:NO];
-InlineTextAttachment *attachment = [[InlineTextAttachment alloc] initWithData:nil ofType:nil];
-UIFont *font = [aString attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="bp">UIImage</span> <span class="o">*</span><span class="n">labelImage</span> <span class="o">=</span> <span class="p">[</span><span class="n">label</span> <span class="nl">snapshotImageAfterScreenUpdates</span><span class="p">:</span><span class="nb">NO</span><span class="p">];</span>
+<span class="n">InlineTextAttachment</span> <span class="o">*</span><span class="n">attachment</span> <span class="o">=</span> <span class="p">[[</span><span class="n">InlineTextAttachment</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithData</span><span class="p">:</span><span class="nb">nil</span> <span class="nl">ofType</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+<span class="bp">UIFont</span> <span class="o">*</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="n">aString</span> <span class="nl">attribute</span><span class="p">:</span><span class="n">NSFontAttributeName</span> <span class="nl">atIndex</span><span class="p">:</span><span class="mi">0</span> <span class="nl">effectiveRange</span><span class="p">:</span><span class="nb">NULL</span><span class="p">];</span>
 
-attachment.fontDescender = font.descender;
-attachment.image = labelImage;
-</code></pre>
+<span class="n">attachment</span><span class="p">.</span><span class="n">fontDescender</span> <span class="o">=</span> <span class="n">font</span><span class="p">.</span><span class="n">descender</span><span class="p">;</span>
+<span class="n">attachment</span><span class="p">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">labelImage</span><span class="p">;</span></code></pre></div>
 
 <p>And bingo! The descender height was exactly the offset I needed to get all my <code>NSTextAttachment</code> instances to line up nicely with my existing text.</p>
 
