@@ -3,7 +3,7 @@ layout: post
 title: "Rendering NSTextAttachment inline in a UITextView"
 modified:
 categories: 
-excerpt: "Getting text attachments to behave well with font baselines"
+excerpt: "Getting text attachments to behave well with font baselines, without getting buried in TextKit."
 tags: []
 image:
   feature:
