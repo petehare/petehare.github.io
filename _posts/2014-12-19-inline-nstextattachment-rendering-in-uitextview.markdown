@@ -4,12 +4,11 @@ title: "Rendering NSTextAttachment inline in a UITextView"
 modified:
 categories: 
 excerpt: "Getting text attachments to behave well with font baselines, without getting buried in TextKit."
-tags: []
+tags: [iOS, Objective-C]
 image:
   feature:
 date: 2014-12-19T17:32:09-08:00
 comments: true
-share: true
 ---
 
 #Background
