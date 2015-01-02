@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Adding Obj-C Prefixes to Swift Class for Interoperability"
+title: "Adding Obj-C Prefix to a Swift Class for Interoperability"
 modified:
 categories: 
 excerpt: Understanding how to use class prefixes with Swift classes in Objective C code.
