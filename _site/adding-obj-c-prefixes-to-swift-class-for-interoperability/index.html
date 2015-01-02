@@ -1,0 +1,276 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Adding Obj-C Prefixes to Swift Class for Interoperability &#8211; Pete Hare</title>
+
+<meta name="keywords" content="iOS, Objective-C, Swift">
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Adding Obj-C Prefixes to Swift Class for Interoperability">
+
+<meta name="twitter:site" content="@petehare">
+<meta name="twitter:creator" content="@petehare">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/images/">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Adding Obj-C Prefixes to Swift Class for Interoperability">
+
+<meta property="og:url" content="/adding-obj-c-prefixes-to-swift-class-for-interoperability/">
+<meta property="og:site_name" content="Pete Hare">
+
+
+
+
+
+<link rel="canonical" href="/adding-obj-c-prefixes-to-swift-class-for-interoperability/">
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Pete Hare Feed">
+
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<!-- Webfonts -->
+<script src="//use.edgefonts.net/source-sans-pro:n2,i2,n3,i3,n4,i4,n6,i6,n7,i7,n9,i9;source-code-pro:n4,n7;volkhov.js"></script>
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+  <script src="/assets/js/vendor/html5shiv.min.js"></script>
+  <script src="/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144x144-precomposed.png">
+
+</head>
+
+<body id="post">
+
+<div class="navigation-wrapper">
+	<nav role="navigation" id="site-nav" class="animated drop">
+	    <ul>
+      
+		    
+		        
+		    
+		    <li><a href="/" >Blog</a></li>
+		  
+		    
+		        
+		    
+		    <li><a href="/about/" >About</a></li>
+		  
+		    
+		        
+		    
+		    <li><a href="/projects/" >Projects</a></li>
+		  
+        
+	    </ul>
+	</nav>
+</div><!-- /.navigation-wrapper -->
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+
+
+
+<header class="masthead">
+	<div class="wrap">
+        
+        <h1 class="site-title animated fadeIn"><a href="">Pete Hare</a></h1>
+		<h2 class="site-description animated fadeIn" itemprop="description">A software developer's ramblings...</h2>
+	</div>
+</header><!-- /.masthead -->
+
+<div class="js-menu-screen menu-screen"></div>
+
+<div id="main" role="main">
+  <article class="hentry">
+    
+    <div class="entry-wrapper">
+      <header class="entry-header">
+        <span class="entry-tags"><a href="/tags/#iOS" title="Pages tagged iOS">iOS</a>&nbsp;&bull;&nbsp;<a href="/tags/#Objective-C" title="Pages tagged Objective-C">Objective-C</a>&nbsp;&bull;&nbsp;<a href="/tags/#Swift" title="Pages tagged Swift">Swift</a></span>
+        
+          <h1 class="entry-title">Adding Obj-C Prefixes to Swift Class for Interoperability</h1>
+        
+      </header>
+      <footer class="entry-meta">
+        
+        
+        
+          <img src="/images/avatar.png" class="bio-photo" alt="Pete Hare bio photo"></a>
+        
+        <span class="author vcard">By <span class="fn">Pete Hare</span></span>
+        <span class="entry-date date published"><time datetime="2015-01-02T15:28:21-08:00"><i class="fa fa-calendar-o"></i> January 02, 2015</time></span>
+        
+        <span class="entry-comments"><i class="fa fa-comment-o"></i> <a href="#disqus_thread">Comment</a></span>
+        
+        
+      </footer>
+      <div class="entry-content">
+        <h1 id="background">Background</h1>
+
+<p>Apple has provided a tonne of documentation on using Swift and Objective C in the same project, however this issue had me very confused for a while. </p>
+
+<p>I wanted my nice, clean, prefixless Swift class to be used in my Objective C code, but I wanted a prefix to keep in line with Obj-C best practices.</p>
+
+<p>The Apple docs state:</p>
+
+<blockquote>
+  <p>Swift also provides a variant of the @objc attribute that allows you to specify name for your symbol in Objective-C.</p>
+</blockquote>
+
+<p>and provide the following example:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="p">@</span><span class="n">objc</span><span class="p">(</span><span class="n">Squirrel</span><span class="p">)</span>
+<span class="k">class</span> <span class="err">Белка</span> <span class="p">{</span>
+    <span class="p">@</span><span class="n">objc</span><span class="p">(</span><span class="nl">initWithName</span><span class="p">:)</span>
+    <span class="k">init</span> <span class="p">(</span><span class="err">имя</span><span class="o">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/*...*/</span> <span class="p">}</span>
+    <span class="p">@</span><span class="n">objc</span><span class="p">(</span><span class="nl">hideNuts</span><span class="p">:</span><span class="nl">inTree</span><span class="p">:)</span>
+    <span class="k">func</span> <span class="err">прячьОрехи</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="err">вДереве</span><span class="o">:</span> <span class="err">Дерево</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/*...*/</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h1 id="the-problem">The Problem</h1>
+
+<p>I specified my nice prefix as suggested in the <code>@objc</code> tag.</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="p">@</span><span class="n">objc</span><span class="p">(</span><span class="n">PHDeleteCell</span><span class="p">)</span>
+<span class="k">class</span> <span class="n">DeleteCell</span> <span class="p">{</span>
+	<span class="cm">/*...*/</span>
+<span class="p">}</span></code></pre></div>
+
+<p>However my Objective C code couldn’t seem to find the prefixed class, and insisted I use <code>DeleteCell</code> as the class name.</p>
+
+<p>Looking at the generated <code>ModuleName-Swift.h</code> header file, the generated Obj-C header is as follows:</p>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">SWIFT_CLASS</span><span class="p">(</span><span class="s">&quot;PHDeleteCell&quot;</span><span class="p">)</span>
+<span class="k">@interface</span> <span class="nc">DeleteCell</span> : <span class="bp">UITableViewCell</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">initWithStyle:</span><span class="p">(</span><span class="n">UITableViewCellStyle</span><span class="p">)</span><span class="nv">style</span> <span class="nf">reuseIdentifier:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">reuseIdentifier</span> <span class="n">OBJC_DESIGNATED_INITIALIZER</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">initWithCoder:</span><span class="p">(</span><span class="bp">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="nv">aDecoder</span> <span class="n">OBJC_DESIGNATED_INITIALIZER</span><span class="p">;</span>
+<span class="k">@end</span></code></pre></div>
+
+<h1 id="the-solution">The Solution</h1>
+
+<p>Well, it’s not so much of a solution, but an answer.</p>
+
+<p>I used the suggested <code>DeleteCell</code> class name in my Objective C code, and built and ran the project. I then set a breakpoint in the debugger and inspected the cell after it was created, which showed the following:</p>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">(</span><span class="n">lldb</span><span class="p">)</span> <span class="n">po</span> <span class="n">cell</span>
+<span class="o">&lt;</span><span class="nl">PHDeleteCell</span><span class="p">:</span> <span class="mh">0x7fa81a74ad10</span><span class="p">;</span> <span class="n">baseClass</span> <span class="o">=</span> <span class="bp">UITableViewCell</span><span class="p">;</span> <span class="n">frame</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="mf">374.13</span><span class="p">;</span> <span class="mi">375</span> <span class="mi">49</span><span class="p">);</span> <span class="n">autoresize</span> <span class="o">=</span> <span class="n">W</span><span class="p">;</span> <span class="n">layer</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nl">CALayer</span><span class="p">:</span> <span class="mh">0x7fa81a74d9d0</span><span class="o">&gt;&gt;</span></code></pre></div>
+
+<p>Turns out, that <em>at runtime the class prefix is used</em>. </p>
+
+<p>Which means I <strong>should</strong> use the prefixless class name in my Objective C code, and don’t have to worry about a conflict.</p>
+
+        <div id="disqus_thread"></div><!-- /#disqus_thread -->
+      </div><!-- /.entry-content -->
+    </div><!-- /.entry-wrapper -->
+    <nav class="pagination" role="navigation">
+      
+        <a href="/inline-nstextattachment-rendering-in-uitextview/" class="btn" title="Rendering NSTextAttachment inline in a UITextView">Previous</a>
+      
+      
+    </nav><!-- /.pagination -->
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo" class="entry-wrapper">
+    
+
+<span>&copy; 2015 Pete Hare. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> using the <a href="http://mademistakes.com/so-simple/" rel="nofollow">So Simple Theme</a>.</span>
+<div class="social-icons">
+	<a href="http://twitter.com/petehare" title="Pete Hare on Twitter" target="_blank"><i class="fa fa-twitter-square fa-2x"></i></a>
+	
+	
+	
+	<a href="http://stackoverflow.com/users/1476170/petehare" title="Pete Hare on StackExchange" target="_blank"><i class="fa fa-stack-exchange fa-2x"></i></a>
+	
+	
+	<a href="http://github.com/petehare" title="Pete Hare on Github" target="_blank"><i class="fa fa-github-square fa-2x"></i></a>
+	
+  <a href="/feed.xml" title="Atom/RSS feed"><i class="fa fa-rss-square fa-2x"></i></a>
+</div><!-- /.social-icons -->
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl = 
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-57889968-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+  
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'petehare'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+	        
+
+</body>
+</html>
