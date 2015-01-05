@@ -2,13 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
 <title type="text">Pete Hare</title>
 <generator uri="https://github.com/jekyll/jekyll">Jekyll</generator>
-<link rel="self" type="application/atom+xml" href="/feed.xml" />
-<link rel="alternate" type="text/html" href="" />
-<updated>2015-01-02T15:51:06-08:00</updated>
-<id>/</id>
+<link rel="self" type="application/atom+xml" href="http://petehare.com/feed.xml" />
+<link rel="alternate" type="text/html" href="http://petehare.com" />
+<updated>2015-01-05T12:45:07-08:00</updated>
+<id>http://petehare.com/</id>
 <author>
   <name>Pete Hare</name>
-  <uri>/</uri>
+  <uri>http://petehare.com/</uri>
   <email>harepj@gmail.com</email>
 </author>
 
@@ -16,14 +16,14 @@
   
 
 <entry>
-  <title type="html"><![CDATA[Adding Obj-C Prefixes to Swift Class for Interoperability]]></title>
-  <link rel="alternate" type="text/html" href="/adding-obj-c-prefixes-to-swift-class-for-interoperability/" />
-  <id>/adding-obj-c-prefixes-to-swift-class-for-interoperability</id>
+  <title type="html"><![CDATA[Adding Obj-C Prefix to a Swift Class for Interoperability]]></title>
+  <link rel="alternate" type="text/html" href="http://petehare.com/adding-obj-c-prefixes-to-swift-class-for-interoperability/" />
+  <id>http://petehare.com/adding-obj-c-prefixes-to-swift-class-for-interoperability</id>
   <published>2015-01-02T15:28:21-08:00</published>
   <updated>2015-01-02T15:28:21-08:00</updated>
   <author>
     <name>Pete Hare</name>
-    <uri></uri>
+    <uri>http://petehare.com</uri>
     <email>harepj@gmail.com</email>
   </author>
   <content type="html">&lt;h1 id=&quot;background&quot;&gt;Background&lt;/h1&gt;
@@ -80,7 +80,7 @@
 
 &lt;p&gt;Which means I &lt;strong&gt;should&lt;/strong&gt; use the prefixless class name in my Objective C code, and don’t have to worry about a conflict.&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;/adding-obj-c-prefixes-to-swift-class-for-interoperability/&quot;&gt;Adding Obj-C Prefixes to Swift Class for Interoperability&lt;/a&gt; was originally published by Pete Hare at &lt;a href=&quot;&quot;&gt;Pete Hare&lt;/a&gt; on January 02, 2015.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://petehare.com/adding-obj-c-prefixes-to-swift-class-for-interoperability/&quot;&gt;Adding Obj-C Prefix to a Swift Class for Interoperability&lt;/a&gt; was originally published by Pete Hare at &lt;a href=&quot;http://petehare.com&quot;&gt;Pete Hare&lt;/a&gt; on January 02, 2015.&lt;/p&gt;</content>
 </entry>
 
 
@@ -88,20 +88,20 @@
 
 <entry>
   <title type="html"><![CDATA[Rendering NSTextAttachment inline in a UITextView]]></title>
-  <link rel="alternate" type="text/html" href="/inline-nstextattachment-rendering-in-uitextview/" />
-  <id>/inline-nstextattachment-rendering-in-uitextview</id>
+  <link rel="alternate" type="text/html" href="http://petehare.com/inline-nstextattachment-rendering-in-uitextview/" />
+  <id>http://petehare.com/inline-nstextattachment-rendering-in-uitextview</id>
   <published>2014-12-19T17:32:09-08:00</published>
   <updated>2014-12-19T17:32:09-08:00</updated>
   <author>
     <name>Pete Hare</name>
-    <uri></uri>
+    <uri>http://petehare.com</uri>
     <email>harepj@gmail.com</email>
   </author>
   <content type="html">&lt;h1 id=&quot;background&quot;&gt;Background&lt;/h1&gt;
 
 &lt;p&gt;Apple’s Mail app for iOS seems to treat a single email address as a single character once entered. When you try to edit the text, the whole email is selected.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/Screen Shot 2014-12-19 at 8.55.14 PM.png&quot; alt=&quot;Email selecting&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://petehare.com/images/Screen Shot 2014-12-19 at 8.55.14 PM.png&quot; alt=&quot;Email selecting&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;In an attempt to mimic the email entry behaviour of the Mail app, I came upon an issue when rendering instances of &lt;code&gt;NSTextAttachment&lt;/code&gt; inside a &lt;code&gt;UITextView&lt;/code&gt;.&lt;/p&gt;
 
@@ -111,15 +111,15 @@
 
 &lt;p&gt;The technique worked very well, except I found my text baseline was being thrown around a bit.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/Screen Shot 2014-12-19 at 9.02.50 PM.png&quot; alt=&quot;NSTextAttachment Baseline&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://petehare.com/images/Screen Shot 2014-12-19 at 9.02.50 PM.png&quot; alt=&quot;NSTextAttachment Baseline&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This had me stumped for a while. The &lt;code&gt;UIImage&lt;/code&gt; that I had generated for the &lt;code&gt;NSTextAttachment&lt;/code&gt; was simply a &lt;code&gt;UILabel&lt;/code&gt; rendered offscreen, and then sized to fit. Given that all my font sizes and string attributes matched up, there should not be any reason for the baselines to not line up &lt;em&gt;perfectly&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;I set a background colour on the label to investigate:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/Screen Shot 2014-12-20 at 1.02.48 AM.png&quot; alt=&quot;Background colour showing baseline&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://petehare.com/images/Screen Shot 2014-12-20 at 1.02.48 AM.png&quot; alt=&quot;Background colour showing baseline&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/Screen Shot 2014-12-20 at 1.03.06 AM.png&quot; alt=&quot;Close up of descenders&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://petehare.com/images/Screen Shot 2014-12-20 at 1.03.06 AM.png&quot; alt=&quot;Close up of descenders&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Aha! It looks like by default, the &lt;code&gt;UITextView&lt;/code&gt; renders instances of &lt;code&gt;NSTextAttachment&lt;/code&gt; on the &lt;em&gt;baseline&lt;/em&gt;, extending upwards. This means the larger the image, the further down my baseline of the following text will be pushed.&lt;/p&gt;
 
@@ -162,9 +162,9 @@
 
 &lt;p&gt;And bingo! The descender height was exactly the offset I needed to get all my &lt;code&gt;NSTextAttachment&lt;/code&gt; instances to line up nicely with my existing text.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/Screen Shot 2014-12-20 at 12.48.50 AM.png&quot; alt=&quot;Final result&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://petehare.com/images/Screen Shot 2014-12-20 at 12.48.50 AM.png&quot; alt=&quot;Final result&quot; /&gt;&lt;/p&gt;
 
-  &lt;p&gt;&lt;a href=&quot;/inline-nstextattachment-rendering-in-uitextview/&quot;&gt;Rendering NSTextAttachment inline in a UITextView&lt;/a&gt; was originally published by Pete Hare at &lt;a href=&quot;&quot;&gt;Pete Hare&lt;/a&gt; on December 19, 2014.&lt;/p&gt;</content>
+  &lt;p&gt;&lt;a href=&quot;http://petehare.com/inline-nstextattachment-rendering-in-uitextview/&quot;&gt;Rendering NSTextAttachment inline in a UITextView&lt;/a&gt; was originally published by Pete Hare at &lt;a href=&quot;http://petehare.com&quot;&gt;Pete Hare&lt;/a&gt; on December 19, 2014.&lt;/p&gt;</content>
 </entry>
 
 </feed>

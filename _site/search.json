@@ -1,10 +1,10 @@
 [
 	
 		{
-		  "title"      : "Adding Obj-C Prefixes to Swift Class for Interoperability",
+		  "title"      : "Adding Obj-C Prefix to a Swift Class for Interoperability",
 		  "category"   : "",
       "tags"       : "iOS, Objective-C, and Swift",
-		  "url"        : "/adding-obj-c-prefixes-to-swift-class-for-interoperability/",
+		  "url"        : "http://petehare.com/adding-obj-c-prefixes-to-swift-class-for-interoperability/",
 		  "date"       : "2015-01-02 15:28:21 -0800",
 		  "shortdate"  : "January 02, 2015"
 		} ,
@@ -13,7 +13,7 @@
 		  "title"      : "Rendering NSTextAttachment inline in a UITextView",
 		  "category"   : "",
       "tags"       : "iOS and Objective-C",
-		  "url"        : "/inline-nstextattachment-rendering-in-uitextview/",
+		  "url"        : "http://petehare.com/inline-nstextattachment-rendering-in-uitextview/",
 		  "date"       : "2014-12-19 17:32:09 -0800",
 		  "shortdate"  : "December 19, 2014"
 		} 
