@@ -1,0 +1,456 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Writing a Basic Genetic Algorithm in Obj-C &#8211; Pete Hare</title>
+<meta name="description" content="Use genetic programming to find the largest circle that fits between other circles">
+<meta name="keywords" content="Objective-C, Genetic Algorithm">
+
+
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Writing a Basic Genetic Algorithm in Obj-C">
+<meta name="twitter:description" content="Use genetic programming to find the largest circle that fits between other circles">
+<meta name="twitter:site" content="@petehare">
+<meta name="twitter:creator" content="@petehare">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://petehare.com/images/">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Writing a Basic Genetic Algorithm in Obj-C">
+<meta property="og:description" content="Use genetic programming to find the largest circle that fits between other circles">
+<meta property="og:url" content="http://petehare.com/writing-a-basic-genetic-algorithm-in-obj-c/">
+<meta property="og:site_name" content="Pete Hare">
+
+
+
+
+
+<link rel="canonical" href="http://petehare.com/writing-a-basic-genetic-algorithm-in-obj-c/">
+<link href="http://petehare.com/feed.xml" type="application/atom+xml" rel="alternate" title="Pete Hare Feed">
+
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://petehare.com/assets/css/main.css">
+<!-- Webfonts -->
+<script src="//use.edgefonts.net/source-sans-pro:n2,i2,n3,i3,n4,i4,n6,i6,n7,i7,n9,i9;source-code-pro:n4,n7;volkhov.js"></script>
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- HTML5 Shiv and Media Query Support -->
+<!--[if lt IE 9]>
+  <script src="http://petehare.com/assets/js/vendor/html5shiv.min.js"></script>
+  <script src="http://petehare.com/assets/js/vendor/respond.min.js"></script>
+<![endif]-->
+
+<!-- Modernizr -->
+<script src="http://petehare.com/assets/js/vendor/modernizr-2.7.1.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://petehare.com/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://petehare.com/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="http://petehare.com/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://petehare.com/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://petehare.com/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://petehare.com/images/apple-touch-icon-144x144-precomposed.png">
+
+</head>
+
+<body id="post">
+
+<div class="navigation-wrapper">
+	<nav role="navigation" id="site-nav" class="animated drop">
+	    <ul>
+      
+		    
+		        
+		    
+		    <li><a href="http://petehare.com/" >Blog</a></li>
+		  
+		    
+		        
+		    
+		    <li><a href="http://petehare.com/about/" >About</a></li>
+		  
+		    
+		        
+		    
+		    <li><a href="http://petehare.com/projects/" >Projects</a></li>
+		  
+        
+	    </ul>
+	</nav>
+</div><!-- /.navigation-wrapper -->
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+
+
+
+<header class="masthead">
+	<div class="wrap">
+        
+        <h1 class="site-title animated fadeIn"><a href="http://petehare.com">Pete Hare</a></h1>
+		<h2 class="site-description animated fadeIn" itemprop="description">A software developer's ramblings...</h2>
+	</div>
+</header><!-- /.masthead -->
+
+<div class="js-menu-screen menu-screen"></div>
+
+<div id="main" role="main">
+  <article class="hentry">
+    
+    <div class="entry-wrapper">
+      <header class="entry-header">
+        <span class="entry-tags"><a href="http://petehare.com/tags/#Objective-C" title="Pages tagged Objective-C">Objective-C</a>&nbsp;&bull;&nbsp;<a href="http://petehare.com/tags/#Genetic Algorithm" title="Pages tagged Genetic Algorithm">Genetic Algorithm</a></span>
+        
+          <h1 class="entry-title">Writing a Basic Genetic Algorithm in Obj-C</h1>
+        
+      </header>
+      <footer class="entry-meta">
+        
+        
+        
+          <img src="http://petehare.com/images/avatar.png" class="bio-photo" alt="Pete Hare bio photo"></a>
+        
+        <span class="author vcard">By <span class="fn">Pete Hare</span></span>
+        <span class="entry-date date published"><time datetime="2015-01-16T21:30:00-08:00"><i class="fa fa-calendar-o"></i> January 16, 2015</time></span>
+        
+        <span class="entry-comments"><i class="fa fa-comment-o"></i> <a href="#disqus_thread">Comment</a></span>
+        
+        
+      </footer>
+      <div class="entry-content">
+        <p>After hearing a lot about genetic algorithms recently, I wanted to get stuck in myself and learn how it all works. Especially after reading Roger Alsing’s recent post on the <a href="http://rogeralsing.com/2008/12/07/genetic-programming-evolution-of-mona-lisa/">Evolution of Mona Lisa</a> (which is totally awesome).</p>
+
+<p>The problem I wanted to solve was this:</p>
+
+<blockquote>
+  <p>Given a space with a number of non-overlapping circles, find the largest circle that can fit without overlapping any of the others</p>
+</blockquote>
+
+<p>Like this:</p>
+
+<p><img src="http://petehare.com/images/Screen-Shot-2015-01-16-at-9.45.55-PM.png" alt="Example solution" /></p>
+
+<h1 id="the-basics">The Basics</h1>
+
+<p>A genetic algorithm (GA) is a surprisingly simple idea at its core. In fact, of the few programs I’ve built so far, a lot of the code is exactly the same.</p>
+
+<p>The algorithm I’ll discuss here works as follows:</p>
+
+<ol>
+  <li>Generate a random population of possible solutions</li>
+  <li>Assign a fitness score to each solution in the population</li>
+  <li>“Breed” a new generation of solutions by selecting random pairs (weighted by their fitness score) from the old population</li>
+  <li>Crossover each selected pair according to a crossover rate</li>
+  <li>Mutate each pair according to a mutation rate</li>
+  <li>Repeat steps 2 through 5</li>
+</ol>
+
+<h1 id="implementation">Implementation</h1>
+
+<h3 id="chromosomes-and-genes">Chromosomes and Genes</h3>
+
+<p>First up, we need a representation of our solution. We call this a <strong>chromosome</strong>. </p>
+
+<p>Given that we want to find a circle, our solution needs to provide a <strong>position</strong> and a <strong>radius</strong>. We’ll encode these values in a binary string. </p>
+
+<p>To store these values, we’ll divide our chromosome into three parts (or <strong>genes</strong>): center-x, center-y, and radius. If we use 10 bits for each gene, it looks like this:</p>
+
+<p><img src="http://petehare.com/images/chromosome-sample.png" alt="Chromosome sample" /></p>
+
+<p>To make reading out the encoded data a little easier, we’ll wrap this up in a class called <code>LargestCircleChromosome</code>. This class decodes the chromosome string as soon as it’s assigned, and stores the values in a <code>Circle</code> object.</p>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">static</span> <span class="bp">NSInteger</span> <span class="k">const</span> <span class="n">kGeneLength</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="k">static</span> <span class="bp">NSInteger</span> <span class="k">const</span> <span class="n">kChromosomeLength</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">kGeneLength</span><span class="p">;</span></code></pre></div>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setChromosomeString:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">chromosomeString</span> <span class="p">{</span>
+    <span class="n">_chromosomeString</span> <span class="o">=</span> <span class="n">chromosomeString</span><span class="p">;</span>
+    
+    <span class="bp">NSString</span> <span class="o">*</span><span class="n">centerXGene</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">chromosomeString</span> <span class="nl">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">kGeneLength</span><span class="p">)];</span>
+    <span class="bp">NSNumber</span> <span class="o">*</span><span class="n">centerX</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="nl">numberFromBinaryString</span><span class="p">:</span><span class="n">centerXGene</span><span class="p">];</span>
+    <span class="bp">NSString</span> <span class="o">*</span><span class="n">centerYGene</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">chromosomeString</span> <span class="nl">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="n">kGeneLength</span><span class="p">,</span> <span class="n">kGeneLength</span><span class="p">)];</span>
+    <span class="bp">NSNumber</span> <span class="o">*</span><span class="n">centerY</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="nl">numberFromBinaryString</span><span class="p">:</span><span class="n">centerYGene</span><span class="p">];</span>
+    
+    <span class="n">_circle</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Circle</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+    <span class="n">_circle</span><span class="p">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">CGPointMake</span><span class="p">([</span><span class="n">centerX</span> <span class="n">floatValue</span><span class="p">],</span> <span class="p">[</span><span class="n">centerY</span> <span class="n">floatValue</span><span class="p">]);</span>
+    
+    <span class="bp">NSString</span> <span class="o">*</span><span class="n">radiusGene</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">chromosomeString</span> <span class="nl">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="n">kGeneLength</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">kGeneLength</span><span class="p">)];</span>
+    <span class="bp">NSNumber</span> <span class="o">*</span><span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="nl">numberFromBinaryString</span><span class="p">:</span><span class="n">radiusGene</span><span class="p">];</span>
+    <span class="n">_circle</span><span class="p">.</span><span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="n">radius</span> <span class="n">floatValue</span><span class="p">];</span>
+<span class="p">}</span></code></pre></div>
+
+<h3 id="fitness-score">Fitness Score</h3>
+
+<p>Next, we need a way to measure the fitness score for a chromosome. This is the hardest part to get right, and how you implement it will vary depending on the problem you’re trying to solve. </p>
+
+<p>The fitness score needs to be able to indicate <em>how much better</em> one chromosome is than another. The following method is effective enough for solving our problem:</p>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">fitnessScoreForChromosome:</span><span class="p">(</span><span class="n">LargestCircleChromosome</span> <span class="o">*</span><span class="p">)</span><span class="nv">chromosome</span> <span class="p">{</span>
+
+    <span class="bp">CGRect</span> <span class="n">circleRect</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="n">chromosome</span><span class="p">.</span><span class="n">circle</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">chromosome</span><span class="p">.</span><span class="n">circle</span><span class="p">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">chromosome</span><span class="p">.</span><span class="n">circle</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">chromosome</span><span class="p">.</span><span class="n">circle</span><span class="p">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">chromosome</span><span class="p">.</span><span class="n">circle</span><span class="p">.</span><span class="n">radius</span> <span class="o">*</span> <span class="mf">2.f</span><span class="p">,</span> <span class="n">chromosome</span><span class="p">.</span><span class="n">circle</span><span class="p">.</span><span class="n">radius</span> <span class="o">*</span> <span class="mf">2.f</span><span class="p">);</span>
+    <span class="bp">CGRect</span> <span class="n">intersectWithBoard</span> <span class="o">=</span> <span class="n">CGRectIntersection</span><span class="p">(</span><span class="n">circleRect</span><span class="p">,</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="n">kBoardSize</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">kBoardSize</span><span class="p">.</span><span class="n">height</span><span class="p">));</span>
+    
+    <span class="c1">// Out of bounds</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">CGRectEqualToRect</span><span class="p">(</span><span class="n">intersectWithBoard</span><span class="p">,</span> <span class="n">circleRect</span><span class="p">)</span> <span class="o">==</span> <span class="nb">NO</span><span class="p">)</span> <span class="k">return</span> <span class="mf">0.f</span><span class="p">;</span>
+    
+    <span class="c1">// Overlaps with another circle</span>
+    <span class="bp">NSUInteger</span> <span class="n">numberOfOverlaps</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">board</span> <span class="nl">numberOfOverlapsForCircle</span><span class="p">:</span><span class="n">chromosome</span><span class="p">.</span><span class="n">circle</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">numberOfOverlaps</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="mf">0.f</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">powf</span><span class="p">(</span><span class="mf">2.f</span><span class="p">,</span> <span class="n">chromosome</span><span class="p">.</span><span class="n">circle</span><span class="p">.</span><span class="n">radius</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>A few things to note here:</p>
+
+<ul>
+  <li>If the circle goes out of bounds at all, give it a fitness score of 0 (effectively killing it off in this generation) </li>
+  <li>If the circle overlaps with any other circle, also kill it off with a fitness score of 0</li>
+  <li>The return value <em>could</em> simply be the radius, however using an exponent will cause the GA to favor slightly larger radii a lot better, and help us get an answer much faster</li>
+</ul>
+
+<h3 id="roulette-wheel-selection">Roulette Wheel Selection</h3>
+
+<p>Selecting random chromosomes according to their fitness score is also referred to as “roulette wheel selection”. You can imagine dividing up a circle into slices where the fitness score determines the size of each slice, then spinning it to choose our random chromosome. </p>
+
+<p>Since we’re pulling out pairs, we can write this as a recursive method to pull out any number of chromosomes.</p>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">-</span> <span class="p">(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nf">selectWeightedRandomChromosomes:</span><span class="p">(</span><span class="bp">NSUInteger</span><span class="p">)</span><span class="nv">numberToSelect</span> <span class="p">{</span>
+    
+    <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">chromosomes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableArray</span> <span class="n">array</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">numberToSelect</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">chromosomes</span> <span class="nl">addObjectsFromArray</span><span class="p">:[</span><span class="nb">self</span> <span class="nl">selectWeightedRandomChromosomes</span><span class="p">:(</span><span class="n">numberToSelect</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]];</span>
+    <span class="p">}</span>
+    
+    <span class="bp">NSArray</span> <span class="o">*</span><span class="n">remainingPopulation</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">population</span> <span class="nl">arrayByRemovingObjectsFromArray</span><span class="p">:</span><span class="n">chromosomes</span><span class="p">];</span>
+    <span class="k">__block</span> <span class="n">CGFloat</span> <span class="n">totalFitness</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">remainingPopulation</span> <span class="nl">enumerateObjectsUsingBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">LargestCircleChromosome</span> <span class="o">*</span><span class="n">chromosome</span><span class="p">,</span> <span class="bp">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="o">*</span><span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">totalFitness</span> <span class="o">+=</span> <span class="n">chromosome</span><span class="p">.</span><span class="n">fitness</span><span class="p">;</span>
+    <span class="p">}];</span>
+    <span class="n">CGFloat</span> <span class="n">selectedFitness</span> <span class="o">=</span> <span class="n">drand48</span><span class="p">()</span> <span class="o">*</span> <span class="n">totalFitness</span><span class="p">;</span>
+    
+    <span class="k">__block</span> <span class="n">CGFloat</span> <span class="n">iteratingFitness</span> <span class="o">=</span> <span class="mf">0.f</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">remainingPopulation</span> <span class="nl">enumerateObjectsUsingBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">LargestCircleChromosome</span> <span class="o">*</span><span class="n">chromosome</span><span class="p">,</span> <span class="bp">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="o">*</span><span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">iteratingFitness</span> <span class="o">+=</span> <span class="n">chromosome</span><span class="p">.</span><span class="n">fitness</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">iteratingFitness</span> <span class="o">&gt;=</span> <span class="n">selectedFitness</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">chromosomes</span> <span class="nl">addObject</span><span class="p">:</span><span class="n">chromosome</span><span class="p">];</span>
+            <span class="o">*</span><span class="n">stop</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}];</span>
+
+    <span class="k">return</span> <span class="n">chromosomes</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<h3 id="crossover-and-mutation">Crossover and Mutation</h3>
+
+<p>The last building block we need is a way to crossover and mutate our chromosomes.</p>
+
+<p>We start by defining a <strong>crossover rate</strong> and <strong>mutation rate</strong>. Playing with these values is very important to get a feel for how it affects the efficiency of the algorithm. The crossover rate can be quite high - we’ll use <code>0.7</code> - while the mutation rate should stay very low - we’ll use <code>0.01</code>. I played with mutation rates ranging from <code>0.001</code> through to <code>0.1</code> which had varying effects on how the program performed.</p>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">static</span> <span class="n">CGFloat</span> <span class="k">const</span> <span class="n">kCrossOverRate</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">;</span>
+<span class="k">static</span> <span class="n">CGFloat</span> <span class="k">const</span> <span class="n">kMutationRate</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">;</span></code></pre></div>
+
+<p>Crossing over a pair of chromosomes is done by selecting a <strong>random point</strong> along both binary strings, and swapping the second section of each string:</p>
+
+<p><img src="http://petehare.com/images/chromosome-crossover.png" alt="Chromosome crossover" /></p>
+
+<p>Which, in code, looks like this:</p>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">-</span> <span class="p">(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nf">crossOverChromosome:</span><span class="p">(</span><span class="n">LargestCircleChromosome</span> <span class="o">*</span><span class="p">)</span><span class="nv">chromosomeOne</span> <span class="nf">withCromosome:</span><span class="p">(</span><span class="n">LargestCircleChromosome</span> <span class="o">*</span><span class="p">)</span><span class="nv">chromosomeTwo</span> <span class="p">{</span>
+    
+    <span class="bp">NSUInteger</span> <span class="n">splitPoint</span> <span class="o">=</span> <span class="n">arc4random_uniform</span><span class="p">((</span><span class="kt">UInt32</span><span class="p">)</span><span class="n">chromosomeOne</span><span class="p">.</span><span class="n">chromosomeString</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+
+    <span class="bp">NSMutableString</span> <span class="o">*</span><span class="n">chromosomeStringOne</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSMutableString</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">chromosomeStringOne</span> <span class="nl">appendString</span><span class="p">:[</span><span class="n">chromosomeOne</span><span class="p">.</span><span class="n">chromosomeString</span> <span class="nl">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">splitPoint</span><span class="p">)]];</span>
+    <span class="p">[</span><span class="n">chromosomeStringOne</span> <span class="nl">appendString</span><span class="p">:[</span><span class="n">chromosomeTwo</span><span class="p">.</span><span class="n">chromosomeString</span> <span class="nl">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="n">splitPoint</span><span class="p">,</span> <span class="n">chromosomeTwo</span><span class="p">.</span><span class="n">chromosomeString</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">splitPoint</span><span class="p">)]];</span>
+    
+    <span class="bp">NSMutableString</span> <span class="o">*</span><span class="n">chromosomeStringTwo</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSMutableString</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">chromosomeStringTwo</span> <span class="nl">appendString</span><span class="p">:[</span><span class="n">chromosomeOne</span><span class="p">.</span><span class="n">chromosomeString</span> <span class="nl">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="n">splitPoint</span><span class="p">,</span> <span class="n">chromosomeOne</span><span class="p">.</span><span class="n">chromosomeString</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">splitPoint</span><span class="p">)]];</span>
+    <span class="p">[</span><span class="n">chromosomeStringTwo</span> <span class="nl">appendString</span><span class="p">:[</span><span class="n">chromosomeTwo</span><span class="p">.</span><span class="n">chromosomeString</span> <span class="nl">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">splitPoint</span><span class="p">)]];</span>
+    
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">mutateChromosomeString</span><span class="p">:</span><span class="n">chromosomeStringOne</span><span class="p">];</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">mutateChromosomeString</span><span class="p">:</span><span class="n">chromosomeStringTwo</span><span class="p">];</span>
+    
+    <span class="k">return</span> <span class="l">@[</span><span class="p">[</span><span class="n">LargestCircleChromosome</span> <span class="nl">chromosomeWithString</span><span class="p">:</span><span class="n">chromosomeStringOne</span><span class="p">],</span> <span class="p">[</span><span class="n">LargestCircleChromosome</span> <span class="nl">chromosomeWithString</span><span class="p">:</span><span class="n">chromosomeStringTwo</span><span class="p">]</span><span class="l">]</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>You’ll notice the two calls to the <code>mutateChromosomeString:</code> method. As part of the crossover process, we apply our mutation function to each new chromosome. </p>
+
+<p><strong>Mutation</strong> is accomplished by looping through each bit in the chromosome binary string, and randomly toggling the value of each bit according to our mutation rate (defined above as <code>0.01</code>).</p>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">mutateChromosomeString:</span><span class="p">(</span><span class="bp">NSMutableString</span> <span class="o">*</span><span class="p">)</span><span class="nv">chromosomeString</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="bp">NSUInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">chromosomeString</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">drand48</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">kMutationRate</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="bp">NSString</span> <span class="o">*</span><span class="n">currentValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">chromosomeString</span> <span class="nl">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)];</span>
+        <span class="p">[</span><span class="n">chromosomeString</span> <span class="nl">replaceCharactersInRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="nl">withString</span><span class="p">:[</span><span class="n">currentValue</span> <span class="nl">isEqualToString</span><span class="p">:</span><span class="s">@&quot;0&quot;</span><span class="p">]</span> <span class="o">?</span> <span class="s">@&quot;1&quot;</span> <span class="o">:</span> <span class="s">@&quot;0&quot;</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<h1 id="putting-it-all-together">Putting It All Together</h1>
+
+<p>Now we can put all these parts together to perform the algorithm outlined at the beginning.</p>
+
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">runWithCompletion:</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">AlgorithmResult</span> <span class="o">*</span><span class="n">result</span><span class="p">))</span><span class="nv">completion</span> <span class="nf">progress:</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">AlgorithmResult</span> <span class="o">*</span><span class="n">result</span><span class="p">))</span><span class="nv">progress</span> <span class="p">{</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">isRunning</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+    
+    <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_global_queue</span><span class="p">(</span><span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">^</span><span class="p">{</span>
+       
+        <span class="p">[</span><span class="nb">self</span> <span class="n">generateRandomPopulation</span><span class="p">];</span>
+        
+        <span class="k">__block</span> <span class="bp">NSUInteger</span> <span class="n">generationCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        
+        <span class="k">while</span> <span class="p">(</span><span class="nb">self</span><span class="p">.</span><span class="n">isRunning</span> <span class="o">==</span> <span class="nb">YES</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">population</span> <span class="nl">enumerateObjectsUsingBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">LargestCircleChromosome</span> <span class="o">*</span><span class="n">chromosome</span><span class="p">,</span> <span class="bp">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="o">*</span><span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">chromosome</span><span class="p">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="nl">fitnessScoreForChromosome</span><span class="p">:</span><span class="n">chromosome</span><span class="p">];</span>
+            <span class="p">}];</span>
+            <span class="n">generationCount</span><span class="o">++</span><span class="p">;</span>
+            
+            <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+                <span class="n">AlgorithmResult</span> <span class="o">*</span><span class="n">algorithmProgress</span> <span class="o">=</span> <span class="p">[</span><span class="n">AlgorithmResult</span> <span class="nl">resultWithChromosome</span><span class="p">:[</span><span class="nb">self</span> <span class="n">fittestChromosome</span><span class="p">]</span> <span class="nl">generations</span><span class="p">:</span><span class="n">generationCount</span><span class="p">];</span>
+                <span class="n">progress</span><span class="p">(</span><span class="n">algorithmProgress</span><span class="p">);</span>
+            <span class="p">});</span>
+            
+            <span class="p">[</span><span class="nb">self</span> <span class="n">breedGeneration</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+            <span class="nb">self</span><span class="p">.</span><span class="n">isRunning</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+            
+            <span class="n">AlgorithmResult</span> <span class="o">*</span><span class="n">algorithmResult</span> <span class="o">=</span> <span class="p">[</span><span class="n">AlgorithmResult</span> <span class="nl">resultWithChromosome</span><span class="p">:[</span><span class="nb">self</span> <span class="n">fittestChromosome</span><span class="p">]</span> <span class="nl">generations</span><span class="p">:</span><span class="n">generationCount</span><span class="p">];</span>
+            <span class="n">completion</span><span class="p">(</span><span class="n">algorithmResult</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">stop</span> <span class="p">{</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">isRunning</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">breedGeneration</span> <span class="p">{</span>
+    <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">newPopulation</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableArray</span> <span class="n">array</span><span class="p">];</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">newPopulation</span><span class="p">.</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">kPopulationSize</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="bp">NSArray</span> <span class="o">*</span><span class="n">chromosomePair</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="nl">selectWeightedRandomChromosomes</span><span class="p">:</span><span class="mi">2</span><span class="p">];</span>
+        
+        <span class="bp">NSArray</span> <span class="o">*</span><span class="n">newChromosomePair</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">drand48</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">kCrossOverRate</span> <span class="o">&amp;&amp;</span> <span class="n">chromosomePair</span><span class="p">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">newChromosomePair</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span> <span class="nl">crossOverChromosome</span><span class="p">:</span><span class="n">chromosomePair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="nl">withCromosome</span><span class="p">:</span><span class="n">chromosomePair</span><span class="p">[</span><span class="mi">1</span><span class="p">]];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">newChromosomePair</span> <span class="o">=</span> <span class="n">chromosomePair</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">newPopulation</span> <span class="nl">addObjectsFromArray</span><span class="p">:</span><span class="n">newChromosomePair</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">population</span> <span class="o">=</span> <span class="n">newPopulation</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Dispatching this algorithm on a background thread lets us view the progress as it improves its best answer. We can use the <code>progress()</code> and <code>completion()</code> blocks to update our UI to reflect the current state of the system.</p>
+
+<p>It’s quite fun to watch the circle grow and mutate itself, certainly feels like magic to me!</p>
+
+<p><img src="http://petehare.com/images/final-circle-genetic-algorithm.gif" alt="Final product" /></p>
+
+<h2 id="source-code">Source Code</h2>
+
+<p>The complete source code for this project can be found <a href="https://github.com/petehare/circle-genetic-algorithm">here on Github</a>.</p>
+
+        <div id="disqus_thread"></div><!-- /#disqus_thread -->
+      </div><!-- /.entry-content -->
+    </div><!-- /.entry-wrapper -->
+    <nav class="pagination" role="navigation">
+      
+        <a href="http://petehare.com/adding-obj-c-prefixes-to-swift-class-for-interoperability/" class="btn" title="Adding Obj-C Prefix to a Swift Class for Interoperability">Previous</a>
+      
+      
+    </nav><!-- /.pagination -->
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo" class="entry-wrapper">
+    
+
+<span>&copy; 2015 Pete Hare. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> using the <a href="http://mademistakes.com/so-simple/" rel="nofollow">So Simple Theme</a>.</span>
+<div class="social-icons">
+	<a href="http://twitter.com/petehare" title="Pete Hare on Twitter" target="_blank"><i class="fa fa-twitter-square fa-2x"></i></a>
+	
+	
+	
+	<a href="http://stackoverflow.com/users/1476170/petehare" title="Pete Hare on StackExchange" target="_blank"><i class="fa fa-stack-exchange fa-2x"></i></a>
+	
+	
+	<a href="http://github.com/petehare" title="Pete Hare on Github" target="_blank"><i class="fa fa-github-square fa-2x"></i></a>
+	
+  <a href="http://petehare.com/feed.xml" title="Atom/RSS feed"><i class="fa fa-rss-square fa-2x"></i></a>
+</div><!-- /.social-icons -->
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://petehare.com/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://petehare.com/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl = 
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-57889968-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+  
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'petehare'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+	        
+
+</body>
+</html>

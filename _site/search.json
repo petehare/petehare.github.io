@@ -1,6 +1,15 @@
 [
 	
 		{
+		  "title"      : "Writing a Basic Genetic Algorithm in Obj-C",
+		  "category"   : "",
+      "tags"       : "Objective-C and Genetic Algorithm",
+		  "url"        : "http://petehare.com/writing-a-basic-genetic-algorithm-in-obj-c/",
+		  "date"       : "2015-01-16 21:30:00 -0800",
+		  "shortdate"  : "January 16, 2015"
+		} ,
+	
+		{
 		  "title"      : "Adding Obj-C Prefix to a Swift Class for Interoperability",
 		  "category"   : "",
       "tags"       : "iOS, Objective-C, and Swift",

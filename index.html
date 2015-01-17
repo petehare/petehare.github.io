@@ -6,12 +6,6 @@ excerpt: "A software developer's ramblings. Blog posts on programming techniques
 
 <ul class="post-list">
 {% for post in site.posts limit:10 %} 
-  <li><article>
-  	<a href="{{ site.url }}{{ post.url }}">
-  		<h3>{{ post.title }}</h3> 
-  		<span class="entry-date"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time></span>
-  		<em>{{ post.excerpt }}</em>
-  	</a>
-  </article></li>
+  <li><article><a href="{{ site.url }}{{ post.url }}">{{ post.title }} <span class="entry-date"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time></span></a></article></li>
 {% endfor %}
 </ul>
