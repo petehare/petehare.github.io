@@ -4,7 +4,7 @@ title: Pete Hare
 locale: en_US
 description: A software developer's ramblings...
 search: false
-url: http://petehare.com
+url: https://petehare.com
 
 
 # Jekyll configuration
@@ -39,7 +39,7 @@ owner:
   facebook: #username
   github: petehare
   mastodon: "https://mastodon.xyz/@petehare"
-  stackexchange: http://stackoverflow.com/users/1476170/petehare
+  stackexchange: https://stackoverflow.com/users/1476170/petehare
   linkedin: #username
   instagram: #username
   flickr: #username
